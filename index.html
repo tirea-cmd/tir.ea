@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>tirea — hub</title>
+
+<!-- PWA META -->
+<meta name="theme-color" content="#0a0e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="tirea">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0e1a;--bg2:#0d1a2e;--bg3:#112438;
+  --panel:#0f1628;--border:#1a2540;--border2:#1f2d4a;
+  --text:#e8edf5;--sub:#7a95b0;--dim:#3a4d65;
+  --accent:#5fb3d4;--accent2:#7cc9e6;
+  --green:#00d68f;--red:#e05555;--gold:#c9a84c;
+}
+html,body{height:100%;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{
+  background:linear-gradient(180deg,#0a0e1a 0%,#0d1a2e 35%,#112438 60%,#162e4a 85%,#1a3856 100%);
+  color:var(--text);
+  font-family:'Space Grotesk',sans-serif;
+  min-height:100vh;
+  min-height:100dvh;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  user-select:none;
+  -webkit-user-select:none;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(95,179,212,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(95,179,212,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+.glow{position:fixed;top:-15%;left:50%;transform:translateX(-50%);width:500px;height:500px;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse,rgba(95,179,212,0.12) 0%,transparent 65%);
+}
+
+/* HEADER */
+header{position:relative;z-index:2;padding:26px 22px 18px;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,rgba(95,179,212,0.2),rgba(95,179,212,0.08));border:1px solid rgba(95,179,212,0.3);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(95,179,212,0.2);}
+.brand-icon svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2}
+.brand-txt{font-size:17px;font-weight:700;letter-spacing:-.5px}
+.brand-txt span{color:rgba(95,179,212,0.45)}
+.clock{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.5px;}
+
+/* HERO LOGO */
+.hero-logo{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:16px 22px 24px;}
+.big-icon{width:108px;height:108px;border-radius:28px;background:linear-gradient(135deg,#5fb3d4 0%,#3d8eaa 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 14px 40px rgba(95,179,212,0.35),inset 0 2px 0 rgba(255,255,255,0.2),inset 0 -4px 0 rgba(0,0,0,0.15);position:relative;overflow:hidden;}
+.big-icon::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,0.3),transparent 60%);}
+.big-icon-txt{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.8px;line-height:1;position:relative;z-index:1;}
+.big-icon-dot{width:5px;height:5px;border-radius:50%;background:#fff;margin-top:6px;opacity:.7;position:relative;z-index:1;}
+.hero-tagline{font-size:12px;color:var(--sub);margin-top:14px;font-weight:400;letter-spacing:.3px;}
+
+/* SEARCH */
+.search-wrap{position:relative;z-index:2;padding:0 22px 16px;}
+.search-bx{position:relative;}
+.search-bx svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--dim);fill:none;stroke-width:2}
+.search-i{width:100%;padding:13px 16px 13px 40px;background:rgba(10,14,26,0.7);backdrop-filter:blur(12px);border:1px solid rgba(95,179,212,0.12);border-radius:13px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.search-i::placeholder{color:var(--dim)}
+.search-i:focus{border-color:rgba(95,179,212,0.35)}
+
+/* GRID APPS */
+.apps-section{position:relative;z-index:2;padding:0 22px 30px;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);}
+.sec-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);padding:3px 10px;background:rgba(95,179,212,0.08);border:1px solid rgba(95,179,212,0.15);border-radius:100px;}
+.apps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 10px;}
+.app-cell{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:transform .15s;position:relative;padding:4px 2px;}
+.app-cell:active{transform:scale(0.92)}
+.app-ic{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;background:linear-gradient(135deg,var(--a-bg1,rgba(95,179,212,0.2)),var(--a-bg2,rgba(95,179,212,0.05)));border:1px solid var(--a-border,rgba(95,179,212,0.25));box-shadow:0 4px 14px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.08);overflow:hidden;}
+.app-ic img{width:100%;height:100%;object-fit:cover;border-radius:16px;}
+.app-ic-letter{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:-1px;}
+.app-cell.add .app-ic{background:rgba(255,255,255,0.03);border:1.5px dashed rgba(95,179,212,0.3);font-size:22px;color:var(--accent)}
+.app-name{font-size:11px;color:var(--text);text-align:center;font-weight:500;letter-spacing:-.1px;line-height:1.15;max-width:72px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.app-cell.add .app-name{color:var(--sub)}
+.app-del{position:absolute;top:-4px;right:-2px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:14px;font-weight:700;display:none;align-items:center;justify-content:center;line-height:1;border:2px solid var(--bg);cursor:pointer;z-index:3;}
+.apps-grid.edit-mode .app-cell:not(.add) .app-del{display:flex;animation:jiggle .5s ease-in-out infinite;}
+.apps-grid.edit-mode .app-cell:not(.add) .app-ic{animation:jiggle .5s ease-in-out infinite;animation-delay:calc(var(--i)*-0.1s);}
+@keyframes jiggle{
+  0%,100%{transform:rotate(0deg)}
+  25%{transform:rotate(-1.5deg)}
+  75%{transform:rotate(1.5deg)}
+}
+
+/* EMPTY STATE */
+.empty-state{grid-column:1/-1;padding:32px 18px;text-align:center;}
+.empty-ic{font-size:38px;margin-bottom:8px;opacity:.5}
+.empty-tt{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.empty-sb{font-size:12px;color:var(--sub);font-weight:300}
+
+/* FLOATING BUTTONS */
+.fab-group{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));right:18px;z-index:50;display:flex;flex-direction:column;gap:10px;}
+.fab{width:50px;height:50px;border-radius:15px;background:rgba(10,14,26,0.85);backdrop-filter:blur(16px);border:1px solid rgba(95,179,212,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,0.4);transition:all .2s;}
+.fab:active{transform:scale(0.92)}
+.fab svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:2}
+.fab.primary{background:linear-gradient(135deg,#5fb3d4,#3d8eaa);border-color:transparent;box-shadow:0 6px 24px rgba(95,179,212,0.4);}
+.fab.primary svg{stroke:#fff;stroke-width:2.5}
+.fab.edit.active{background:linear-gradient(135deg,#c9a84c,#8a6f28);box-shadow:0 6px 24px rgba(201,168,76,0.4);}
+.fab.edit.active svg{stroke:#fff}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;z-index:500;background:rgba(5,8,18,0.85);backdrop-filter:blur(18px);display:none;align-items:flex-end;justify-content:center;padding:0;}
+.modal-ov.open{display:flex;animation:fadeBg .2s ease}
+@keyframes fadeBg{from{opacity:0}to{opacity:1}}
+.modal{width:100%;max-width:480px;background:rgba(8,12,24,0.99);border-top:1px solid rgba(95,179,212,0.2);border-radius:24px 24px 0 0;padding:14px 22px calc(22px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;animation:slideUp .32s cubic-bezier(0.2,0.9,0.3,1);}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:10px;margin:0 auto 18px;}
+.modal-h{font-size:17px;font-weight:700;margin-bottom:3px;letter-spacing:-.3px;}
+.modal-p{font-size:12px;color:var(--sub);font-weight:300;margin-bottom:20px;line-height:1.5;}
+.fg{margin-bottom:14px}
+.lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;display:block;}
+.inp{width:100%;padding:11px 13px;background:rgba(5,8,18,0.9);border:1px solid rgba(95,179,212,0.15);border-radius:10px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.inp:focus{border-color:rgba(95,179,212,0.4)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ICON PICKER */
+.icon-type-tabs{display:flex;gap:6px;background:rgba(5,8,18,0.6);border:1px solid rgba(95,179,212,0.1);border-radius:10px;padding:4px;margin-bottom:10px;}
+.itt{flex:1;padding:8px 4px;background:none;border:none;border-radius:7px;color:var(--sub);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;}
+.itt.active{background:rgba(95,179,212,0.12);color:var(--accent)}
+.ico-panel{display:none}.ico-panel.on{display:block}
+
+/* EMOJI PICKER */
+.emoji-quick{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:10px;}
+.eq{aspect-ratio:1;background:rgba(5,8,18,0.8);border:1px solid rgba(95,179,212,0.08);border-radius:9px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0;}
+.eq.sel{background:rgba(95,179,212,0.15);border-color:rgba(95,179,212,0.4)}
+
+/* LETTER PREVIEW */
+.letter-preview{display:flex;align-items:center;gap:12px;padding:10px;background:rgba(5,8,18,0.6);border:1px solid rgba(95,179,212,0.1);border-radius:10px;margin-bottom:10px;}
+.letter-preview .app-ic{width:48px;height:48px;border-radius:13px}
+.letter-preview .app-ic-letter{font-size:19px}
+.color-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.cp{width:28px;height:28px;border-radius:9px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
+.cp.sel{border-color:#fff;}
+
+/* IMG UPLOAD */
+.img-drop{border:1.5px dashed rgba(95,179,212,0.25);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.img-drop:hover{border-color:rgba(95,179,212,0.45);background:rgba(95,179,212,0.04)}
+.img-drop.has-img{padding:0;border-style:solid;overflow:hidden;}
+.img-preview-box{width:70px;height:70px;border-radius:16px;background-size:cover;background-position:center;margin:0 auto;}
+.img-placeholder{padding:18px 10px;color:var(--sub);font-size:12px;}
+.img-placeholder svg{width:24px;height:24px;margin:0 auto 6px;display:block;stroke:var(--dim);fill:none;stroke-width:1.8;}
+.img-rem{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:7px;background:rgba(0,0,0,0.7);border:none;color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center;}
+.img-drop.has-img .img-rem{display:flex}
+.img-rem svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:18px;}
+.btn{flex:1;padding:13px;border-radius:11px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;border:1px solid;text-align:center;}
+.btn:active{transform:scale(0.97)}
+.btn.primary{background:linear-gradient(135deg,#5fb3d4,#3d8eaa);border-color:transparent;color:#fff;box-shadow:0 4px 16px rgba(95,179,212,0.35);}
+.btn.secondary{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:var(--sub)}
+
+/* INSTALL PROMPT */
+.install-prompt{position:fixed;bottom:calc(85px + env(safe-area-inset-bottom));left:18px;right:18px;z-index:40;background:rgba(10,14,26,0.95);backdrop-filter:blur(20px);border:1px solid rgba(95,179,212,0.3);border-radius:14px;padding:14px 16px;display:none;align-items:center;gap:12px;box-shadow:0 10px 40px rgba(0,0,0,0.5);}
+.install-prompt.show{display:flex;animation:slideIn .4s cubic-bezier(0.2,0.9,0.3,1);}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ip-icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#5fb3d4,#3d8eaa);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ip-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2}
+.ip-text{flex:1;min-width:0}
+.ip-title{font-size:13px;font-weight:700;margin-bottom:1px;}
+.ip-sub{font-size:11px;color:var(--sub);line-height:1.3;}
+.ip-btn{padding:8px 14px;background:rgba(95,179,212,0.15);border:1px solid rgba(95,179,212,0.3);border-radius:8px;color:var(--accent);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.ip-close{background:none;border:none;color:var(--dim);cursor:pointer;padding:4px;flex-shrink:0;}
+.ip-close svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* TOAST */
+.toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-100px);z-index:999;background:rgba(10,14,26,0.98);backdrop-filter:blur(16px);border:1px solid rgba(95,179,212,0.25);border-radius:12px;padding:11px 18px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,0.5);transition:transform .35s cubic-bezier(0.2,0.9,0.3,1);opacity:0;}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.toast.s{border-color:rgba(0,214,143,0.3)}
+.toast.w{border-color:rgba(201,168,76,0.3)}
+.toast svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2}
+
+@media(min-width:500px){
+  .apps-grid{grid-template-columns:repeat(5,1fr);gap:16px 12px;}
+}
+@media(min-width:700px){
+  .apps-grid{grid-template-columns:repeat(6,1fr);gap:22px 16px;}
+  header{padding:32px 40px 20px;max-width:1200px;margin:0 auto;}
+  .hero-logo{padding:20px 40px 28px;}
+  .search-wrap,.apps-section{max-width:1200px;margin:0 auto;padding-left:40px;padding-right:40px;}
+  .app-ic{width:68px;height:68px;border-radius:18px;font-size:30px;}
+  .app-ic-letter{font-size:26px}
+  .app-name{font-size:12px;max-width:90px;}
+  .big-icon{width:120px;height:120px;border-radius:30px;}
+  .big-icon-txt{font-size:26px}
+}
+@media(min-width:1000px){
+  .apps-grid{grid-template-columns:repeat(8,1fr);gap:26px 18px;}
+  .app-ic{width:76px;height:76px;border-radius:20px;font-size:32px;}
+  .app-ic-letter{font-size:28px}
+  .app-name{font-size:13px;max-width:100px;}
+}
+@media(min-width:1400px){
+  .apps-grid{grid-template-columns:repeat(10,1fr);}
+}
+/* CURSOR POINTER PE DESKTOP */
+@media(hover:hover){
+  .app-cell:hover .app-ic{transform:translateY(-3px);box-shadow:0 8px 24px rgba(95,179,212,0.3);border-color:rgba(95,179,212,0.4);}
+  .app-cell .app-ic{transition:all .2s ease}
+  .fab:hover{transform:translateY(-2px);border-color:rgba(95,179,212,0.4);}
+  .fab.primary:hover{box-shadow:0 8px 28px rgba(95,179,212,0.55);}
+}
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
+    <div class="brand-txt">tirea<span>.</span>ro</div>
+  </div>
+  <div class="clock" id="clk">—</div>
+</header>
+
+<!-- HERO -->
+<div class="hero-logo">
+  <div class="big-icon">
+    <div class="big-icon-txt">tirea</div>
+    <div class="big-icon-dot"></div>
+  </div>
+  <div class="hero-tagline">Hub personal — toate aplicațiile tale</div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-bx">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+    <input type="text" class="search-i" id="search" placeholder="Caută aplicație..." oninput="filterApps()">
+  </div>
+</div>
+
+<!-- APPS -->
+<div class="apps-section">
+  <div class="sec-head">
+    <div class="sec-title">Aplicațiile mele</div>
+    <div class="sec-count" id="ap-count">0</div>
+  </div>
+  <div class="apps-grid" id="apps-grid"></div>
+</div>
+
+<!-- FABS -->
+<div class="fab-group">
+  <div class="fab edit" id="fab-edit" onclick="toggleEditMode()" title="Editează">
+    <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+  </div>
+  <div class="fab primary" onclick="openAppModal(null)" title="Adaugă">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </div>
+</div>
+
+<!-- INSTALL PROMPT -->
+<div class="install-prompt" id="inst-prompt">
+  <div class="ip-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg></div>
+  <div class="ip-text">
+    <div class="ip-title">Instalează pe telefon</div>
+    <div class="ip-sub" id="ip-sub">Adaugă pe ecranul principal</div>
+  </div>
+  <button class="ip-btn" id="ip-btn" onclick="installApp()">Instalează</button>
+  <button class="ip-close" onclick="closePrompt()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+</div>
+
+<!-- MODAL ADD/EDIT -->
+<div class="modal-ov" id="modal-ov">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-h" id="modal-h">Adaugă aplicație</div>
+    <div class="modal-p" id="modal-p">Un nume, un link, o iconiță. Gata.</div>
+
+    <div class="fg">
+      <label class="lbl">Nume</label>
+      <input type="text" class="inp" id="m-name" placeholder="ex: Claude, Lumea Holograme..." oninput="updLetterPreview()">
+    </div>
+
+    <div class="fg">
+      <label class="lbl">Link / URL</label>
+      <input type="url" class="inp" id="m-url" placeholder="https://claude.ai">
+    </div>
+
+    <div class="fg">
+      <label class="lbl">Iconiță</label>
+      <div class="icon-type-tabs">
+        <button class="itt active" onclick="setIconType('letter')">Litere</button>
+        <button class="itt" onclick="setIconType('image')">Imagine</button>
+      </div>
+
+      <!-- LETTER -->
+      <div class="ico-panel on" id="p-letter">
+        <div class="letter-preview">
+          <div class="app-ic" id="lp-ic" style="background:linear-gradient(135deg,#5fb3d4,#3d8eaa)">
+            <div class="app-ic-letter" id="lp-txt">T</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--sub);margin-bottom:3px;">Culoare fundal</div>
+            <div class="color-pills" id="color-pills"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMAGE -->
+      <div class="ico-panel" id="p-image">
+        <div class="img-drop" id="img-drop" onclick="document.getElementById('img-in').click()">
+          <div class="img-placeholder" id="img-ph">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            Încarcă imagine (pătrat, max 1MB)
+          </div>
+          <div class="img-preview-box" id="img-pv" style="display:none"></div>
+          <button class="img-rem" onclick="event.stopPropagation();remImg()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+          <input type="file" id="img-in" accept="image/*" style="display:none" onchange="handleImg(event)">
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn secondary" onclick="closeAppModal()">Anulează</button>
+      <button class="btn primary" onclick="saveApp()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toast-ic"></span><span id="toast-txt"></span></div>
+
+<script>
+// ═════════════════════════════
+// CONFIG
+// ═════════════════════════════
+const LS_KEY='tirea_launcher_apps_v1';
+const COLORS=[
+  '#5fb3d4 0%,#3d8eaa 100%',  // albastru (default tirea)
+  '#00d68f 0%,#008858 100%',  // verde
+  '#c9a84c 0%,#8a6f28 100%',  // auriu
+  '#8b6fd4 0%,#5f4a9e 100%',  // mov
+  '#e07a35 0%,#a5501a 100%',  // portocaliu
+  '#e05555 0%,#9c2e2e 100%',  // rosu
+  '#7a95b0 0%,#4a5e74 100%',  // gri-albastru
+  '#1a3856 0%,#0a1a30 100%',  // negru-albastru
+];
+
+// STATE
+let apps=JSON.parse(localStorage.getItem(LS_KEY)||'null');
+if(!apps){
+  // default apps la prima deschidere — cu pozele tale
+  apps=[
+    {id:'app_1',name:'chatcalculator',url:'https://tirroxanimo-dotcom.github.io/tirea/',iconType:'image',iconImage:'app-calculator.png'},
+    {id:'app_2',name:'Tirea Node',url:'https://tirea-cmd.github.io/tireanode/',iconType:'image',iconImage:'app-tireanode.png'},
+    {id:'app_3',name:'Platformă',url:'https://tirea-cmd.github.io/tireaplatforma-/',iconType:'image',iconImage:'app-platforma.png'},
+    {id:'app_4',name:'Decor H',url:'https://tirroxanimo-dotcom.github.io/decorh/',iconType:'image',iconImage:'app-decorh.png'},
+    {id:'app_5',name:'Tirea Park',url:'https://tirroxanimo-dotcom.github.io/Tireapark/',iconType:'image',iconImage:'app-tireapark.png'},
+    {id:'app_6',name:'Scan Tir',url:'https://tirroxanimo-dotcom.github.io/scantir/',iconType:'image',iconImage:'app-scantir.png'},
+    {id:'app_7',name:'App Topo',url:'https://tirroxanimo-dotcom.github.io/apptopo/',iconType:'image',iconImage:'app-apptopo.png'},
+    {id:'app_8',name:'lumea hologramelor',url:'https://tirroxanimo.ro/',iconType:'image',iconImage:'app-holograme.png'},
+    {id:'app_9',name:'amenajamente pastorale',url:'https://tirroxanimo-dotcom.github.io/pastoral/',iconType:'image',iconImage:'app-pastoral.png'},
+    {id:'app_10',name:'admin tireapark',url:'https://tirroxanimo-dotcom.github.io/Tireapark_admin/',iconType:'image',iconImage:'app-tireaparkadmin.png'},
+  ];
+  save();
+}
+let editMode=false;
+let editingId=null;
+let iconType='letter';
+let iconColor=0;
+let iconImage=null;
+
+// ═════════════════════════════
+// RENDER
+// ═════════════════════════════
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(apps));}
+
+function render(){
+  const grid=document.getElementById('apps-grid');
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const list=q?apps.filter(a=>a.name.toLowerCase().includes(q)):apps;
+  document.getElementById('ap-count').textContent=apps.length;
+
+  if(!list.length && q){
+    grid.innerHTML=`<div class="empty-state"><div class="empty-ic">🔍</div><div class="empty-tt">Nu s-a găsit nimic</div><div class="empty-sb">pentru "${escHtml(q)}"</div></div>`;
+    return;
+  }
+
+  let html=list.map((a,i)=>{
+    let ic='';
+    if(a.iconType==='image' && a.iconImage){
+      ic=`<div class="app-ic"><img src="${a.iconImage}" alt=""></div>`;
+    } else {
+      const c=COLORS[a.iconColor||0];
+      ic=`<div class="app-ic" style="background:linear-gradient(135deg,${c})"><div class="app-ic-letter">${escHtml((a.iconLetter||a.name||'?').charAt(0).toUpperCase())}</div></div>`;
+    }
+    return `<div class="app-cell" style="--i:${i}" onclick="tapApp(event,'${a.id}')">
+      <div class="app-del" onclick="event.stopPropagation();delApp('${a.id}')">×</div>
+      ${ic}
+      <div class="app-name">${escHtml(a.name)}</div>
+    </div>`;
+  }).join('');
+
+  // butonul de adăugare la final (doar dacă nu suntem în edit mode și nu căutăm)
+  if(!q && !editMode){
+    html+=`<div class="app-cell add" onclick="openAppModal(null)">
+      <div class="app-ic">+</div>
+      <div class="app-name">Adaugă</div>
+    </div>`;
+  }
+
+  grid.innerHTML=html;
+  grid.classList.toggle('edit-mode',editMode);
+}
+
+function escHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function tapApp(e,id){
+  if(editMode){
+    openAppModal(id);
+    return;
+  }
+  const a=apps.find(x=>x.id===id);
+  if(a && a.url){
+    window.open(a.url,'_blank');
+  }
+}
+
+function delApp(id){
+  if(!confirm('Ștergi aplicația?'))return;
+  apps=apps.filter(a=>a.id!==id);
+  save();render();
+  toast('Aplicație ștearsă','w');
+}
+
+function toggleEditMode(){
+  editMode=!editMode;
+  document.getElementById('fab-edit').classList.toggle('active',editMode);
+  render();
+  toast(editMode?'Mod editare activ — apasă pentru editare sau × pentru ștergere':'Mod editare dezactivat','s');
+}
+
+// ═════════════════════════════
+// MODAL
+// ═════════════════════════════
+function openAppModal(id){
+  editingId=id;
+  iconType='letter';iconColor=0;iconImage=null;
+  document.querySelectorAll('.itt').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.ico-panel').forEach((p,i)=>p.classList.toggle('on',i===0));
+
+  if(id){
+    const a=apps.find(x=>x.id===id);
+    if(!a)return;
+    document.getElementById('modal-h').textContent='Editează aplicație';
+    document.getElementById('modal-p').textContent='Modifică și salvează.';
+    document.getElementById('m-name').value=a.name||'';
+    document.getElementById('m-url').value=a.url||'';
+    iconType=a.iconType||'letter';
+    iconColor=a.iconColor||0;
+    iconImage=a.iconImage||null;
+    if(iconType==='emoji')iconType='letter'; // legacy — convertesc la letter
+    setIconType(iconType);
+    if(iconImage && iconImage.startsWith('data:'))showImg(iconImage);
+    else if(iconImage)showImg(iconImage);
+    else hideImg();
+  } else {
+    document.getElementById('modal-h').textContent='Adaugă aplicație';
+    document.getElementById('modal-p').textContent='Un nume, un link, o iconiță. Gata.';
+    document.getElementById('m-name').value='';
+    document.getElementById('m-url').value='';
+    hideImg();
+  }
+  renderColors();
+  updLetterPreview();
+  document.getElementById('modal-ov').classList.add('open');
+  setTimeout(()=>document.getElementById('m-name').focus(),250);
+}
+function closeAppModal(){
+  document.getElementById('modal-ov').classList.remove('open');
+  editingId=null;
+}
+function saveApp(){
+  const name=document.getElementById('m-name').value.trim();
+  const url=document.getElementById('m-url').value.trim();
+  if(!name){toast('Numele e obligatoriu','w');return;}
+  if(!url){toast('URL-ul e obligatoriu','w');return;}
+  let finalUrl=url;
+  if(!/^https?:\/\//i.test(finalUrl))finalUrl='https://'+finalUrl;
+
+  const data={
+    name,url:finalUrl,iconType,
+    iconLetter:name.charAt(0).toUpperCase(),
+    iconColor,iconImage
+  };
+
+  if(editingId){
+    const i=apps.findIndex(a=>a.id===editingId);
+    if(i>-1)apps[i]={...apps[i],...data};
+    toast('Aplicație actualizată','s');
+  } else {
+    apps.push({id:'app_'+Date.now(),...data});
+    toast('Aplicație adăugată','s');
+  }
+  save();render();closeAppModal();
+}
+
+function setIconType(t){
+  iconType=t;
+  const tabs=document.querySelectorAll('.itt');
+  const panels=document.querySelectorAll('.ico-panel');
+  const map={letter:0,image:1};
+  const idx=map[t]!==undefined?map[t]:0;
+  tabs.forEach((b,i)=>b.classList.toggle('active',i===idx));
+  panels.forEach((p,i)=>p.classList.toggle('on',i===idx));
+}
+
+function renderColors(){
+  document.getElementById('color-pills').innerHTML=COLORS.map((c,i)=>
+    `<div class="cp ${i===iconColor?'sel':''}" style="background:linear-gradient(135deg,${c})" onclick="pickColor(${i})"></div>`
+  ).join('');
+}
+function pickColor(i){iconColor=i;renderColors();updLetterPreview();}
+
+function updLetterPreview(){
+  const name=document.getElementById('m-name').value.trim()||'T';
+  document.getElementById('lp-txt').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('lp-ic').style.background=`linear-gradient(135deg,${COLORS[iconColor]})`;
+}
+
+// IMG
+function handleImg(e){
+  const f=e.target.files[0];
+  if(!f)return;
+  if(f.size>1024*1024){toast('Imagine prea mare (max 1MB)','w');return;}
+  const r=new FileReader();
+  r.onload=(ev)=>{iconImage=ev.target.result;showImg(iconImage);};
+  r.readAsDataURL(f);
+}
+function showImg(src){
+  document.getElementById('img-drop').classList.add('has-img');
+  document.getElementById('img-ph').style.display='none';
+  document.getElementById('img-pv').style.display='block';
+  document.getElementById('img-pv').style.backgroundImage=`url('${src}')`;
+}
+function hideImg(){
+  document.getElementById('img-drop').classList.remove('has-img');
+  document.getElementById('img-ph').style.display='block';
+  document.getElementById('img-pv').style.display='none';
+  document.getElementById('img-in').value='';
+  iconImage=null;
+}
+function remImg(){hideImg();}
+
+// SEARCH
+function filterApps(){render();}
+
+// TOAST
+function toast(msg,type='s'){
+  const t=document.getElementById('toast');
+  const icons={s:'<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>',w:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4M12 16h.01"></path></svg>'};
+  document.getElementById('toast-ic').innerHTML=icons[type]||icons.s;
+  document.getElementById('toast-txt').textContent=msg;
+  t.className='toast '+type+' show';
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// CLOCK
+function tickClock(){
+  const n=new Date();
+  document.getElementById('clk').textContent=n.toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});
+}
+tickClock();setInterval(tickClock,30000);
+
+// Close modal on overlay click
+document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target.id==='modal-ov')closeAppModal();});
+
+// ═════════════════════════════
+// PWA INSTALL
+// ═════════════════════════════
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  if(!sessionStorage.getItem('ip_closed')){
+    setTimeout(()=>document.getElementById('inst-prompt').classList.add('show'),2500);
+  }
+});
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{deferredPrompt=null;closePrompt();});
+  } else {
+    // iOS / browser fără suport API
+    alert('Pe iPhone: Share (⬆️) → "Add to Home Screen"\n\nPe Android: meniul ⋮ → "Add to Home Screen"');
+    closePrompt();
+  }
+}
+function closePrompt(){
+  document.getElementById('inst-prompt').classList.remove('show');
+  sessionStorage.setItem('ip_closed','1');
+}
+// iOS detect
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+if(isIOS && !isStandalone && !sessionStorage.getItem('ip_closed')){
+  document.getElementById('ip-sub').textContent='Share (⬆️) → Add to Home Screen';
+  document.getElementById('ip-btn').textContent='Cum?';
+  setTimeout(()=>document.getElementById('inst-prompt').classList.add('show'),2500);
+}
+
+// Service worker (pentru offline)
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+// INITIAL RENDER
+render();
+</script>
+</body>
+</html>
